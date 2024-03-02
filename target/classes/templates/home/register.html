@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Trang chủ</title>
+    <link rel="stylesheet" th:href="@{/css/register-css.css}" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container">
+        <a class="navbar-brand fw-bold" th:href="@{/}">Đặt lịch khám Online</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNavDropdown"
+          aria-controls="navbarNavDropdown"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div
+          class="collapse navbar-collapse justify-content-end"
+          id="navbarNavDropdown"
+        >
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#"
+                >Trang chủ</a
+              >
+            </li>
+
+            <li
+              sec:authorize="hasAnyRole('BENHNHAN','BACSI','ADMIN')"
+              class="nav-item dropdown"
+            >
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <span th:text="${loginAccount.name}"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a class="dropdown-item" th:href="@{/infor-account}">Hồ sơ</a>
+                </li>
+
+                <li>
+                  <p class="dropdown-item">
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary postJobBtn"
+                    >
+                      Đăng tin tuyển dụng
+                    </button>
+                  </p>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <form
+                sec:authorize="hasAnyRole('BENHNHAN','BACSI','ADMIN')"
+                action="#"
+                th:action="@{/logout}"
+                method="post"
+              >
+                <input
+                  class="btn btn-outline-warning"
+                  type="submit"
+                  value="Đăng xuất"
+                />
+              </form>
+
+              <div sec:authorize="hasRole('ANONYMOUS')">
+                <a class="btn btn-primary" th:href="@{/showMyLoginPage}"
+                  >Đăng nhập</a
+                >
+                <a
+                  class="btn btn-outline-secondary"
+                  th:href="@{/showMyRegisterPage}"
+                  >Đăng ký</a
+                >
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- nav end -->
+    <div
+      sec:authorize="hasAnyRole('BENHNHAN','BACSI','ADMIN')"
+      class="container"
+    >
+      <h2>Vui lòng đăng xuất</h2>
+    </div>
+    <div sec:authorize="hasRole('ANONYMOUS')" class="container">
+      <div
+        class="row d-md-flex justify-content-center text-light text-center mt-5"
+      >
+        <h2>Đăng ký</h2>
+
+        <div class="col-lg-7 bg-form border-2">
+          <span class="mt-2" style="color: red" th:text="${message}" />
+          <form
+            class="pt-5 pb-5"
+            th:action="@{/register/saveNewAccount}"
+            th:object="${newAccount}"
+            method="post"
+          >
+            <input type="hidden" th:field="*{id}" />
+            <p class="mb-1">Email:</p>
+            <input
+              class="align-content-end"
+              type="email"
+              th:field="*{email}"
+              placeholder="Email"
+            /><br />
+            <br />
+
+            <p class="mb-1">Họ và tên:</p>
+            <input
+              type="text"
+              th:field="*{name}"
+              placeholder="Họ và tên"
+            /><br />
+            <br />
+
+            <p class="mb-1">Mật khẩu:</p>
+            <input
+              type="password"
+              th:field="*{password}"
+              placeholder="Mật khẩu"
+            /><br />
+            <br />
+
+            <p class="mb-1">Nhập lại mật khẩu:</p>
+            <input
+              type="password"
+              name="confirmPw"
+              placeholder="Nhập lại mật khẩu"
+            /><br />
+            <br />
+
+            <p class="mb-1">Vai trò:</p>
+            <select name="role">
+              <option value="ROLE_BENHNHAN">Bệnh nhân</option>
+              <option value="ROLE_BACSI">Bác sĩ</option>
+              <option value="ROLE_ADMIN">Admin</option>
+            </select>
+            <br />
+            <br />
+            <button type="submit" class="btn btn-outline-primary">
+              Đăng ký
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script th:src="@{/js/register-js.js}"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
